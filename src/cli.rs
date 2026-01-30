@@ -65,6 +65,8 @@ pub enum Request {
         #[arg(long)]
         id: usize,
     },
+    /// Request information about all workspaces.
+    Workspaces,
     /// Get a workspace from an output name and index.
     GetWorkspace {
         /// The output name to get the workspace on. If not provided, use the focused output.

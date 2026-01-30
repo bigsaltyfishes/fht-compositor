@@ -16,6 +16,7 @@ pub fn make_request(request: cli::Request, json: bool) -> anyhow::Result<()> {
         cli::Request::Space => fht_compositor_ipc::Request::Space,
         cli::Request::Window { id } => fht_compositor_ipc::Request::Window(id),
         cli::Request::Workspace { id } => fht_compositor_ipc::Request::Workspace(id),
+        cli::Request::Workspaces => fht_compositor_ipc::Request::Workspaces,
         cli::Request::GetWorkspace { output, index } => {
             fht_compositor_ipc::Request::GetWorkspace { output, index }
         }
@@ -96,6 +97,9 @@ pub fn make_request(request: cli::Request, json: bool) -> anyhow::Result<()> {
                     Some(workspace) => serde_json::to_string(workspace),
                     none => serde_json::to_string(none),
                 }
+            }
+            fht_compositor_ipc::Response::Workspaces(workspaces) => {
+                serde_json::to_string(&workspaces)
             }
             fht_compositor_ipc::Response::Space(space) => serde_json::to_string(&space),
             fht_compositor_ipc::Response::Error(err) => {
@@ -237,6 +241,9 @@ fn print_formatted(res: &fht_compositor_ipc::Response) -> anyhow::Result<()> {
                 "Number of master windows: {}",
                 workspace.nmaster
             )?;
+        }
+        fht_compositor_ipc::Response::Workspaces(workspaces) => {
+            writeln!(&mut writer, "Workspaces: {:#?}", workspaces)?;
         }
         fht_compositor_ipc::Response::PickedLayerShell(result) => match result {
             PickLayerShellResult::Some(layer_shell) => {

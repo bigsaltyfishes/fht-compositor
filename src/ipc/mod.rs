@@ -305,6 +305,11 @@ async fn handle_request(
             let workspace = workspaces.get(&id).cloned();
             Ok(Response::Workspace(workspace))
         }
+        fht_compositor_ipc::Request::Workspaces => {
+            let state = compositor_state.borrow();
+            let workspaces = state.workspaces.clone();
+            Ok(Response::Workspaces(workspaces))
+        }
         fht_compositor_ipc::Request::GetWorkspace { output, index } => {
             let state = compositor_state.borrow();
             let id = match output {

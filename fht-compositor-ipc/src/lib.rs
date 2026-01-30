@@ -69,6 +69,8 @@ pub enum Request {
     Window(usize),
     /// Request information about a workspace.
     Workspace(usize),
+    /// Request information about all workspaces.
+    Workspaces,
     /// Get a workspace id from an output name and index.
     GetWorkspace {
         /// The output name to get the workspace on. If `None`, use the focused output.
@@ -112,6 +114,8 @@ pub enum Response {
     Window(Option<Window>),
     /// Information about a workspace.
     Workspace(Option<Workspace>),
+    /// Infromation about workspaces
+    Workspaces(HashMap<usize, Workspace>),
     /// The picked window by the user.
     PickedWindow(PickWindowResult),
     /// The picked layer shell by the user.

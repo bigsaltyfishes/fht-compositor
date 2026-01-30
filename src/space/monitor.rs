@@ -87,6 +87,7 @@ impl Monitor {
     pub fn refresh(&mut self, is_active: bool) {
         crate::profile_function!();
         self.is_active = is_active;
+        self.workspaces[self.active_idx].set_focused(is_active);
         for workspace in &mut self.workspaces {
             workspace.refresh();
         }
@@ -222,6 +223,7 @@ impl Monitor {
         }
 
         self.active_idx = idx;
+        self.workspaces[idx].set_active(true);
         self.workspaces[self.active_idx].active_window()
     }
 

@@ -321,6 +321,13 @@ pub struct Workspace {
     ///
     /// This must NEVER be 0.
     pub nmaster: usize,
+    /// Whether the workspace is focused
+    ///
+    /// Each monitor has its own active workspace, but only the foucsed monitor's workspace will be
+    /// marked as focused.
+    pub is_focused: bool,
+    /// Whether the workspace is active
+    pub is_active: bool,
 }
 
 const WORKSPACE_COUNT: usize = 9;

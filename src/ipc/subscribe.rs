@@ -242,8 +242,6 @@ impl Fht {
         let mut active_workspace_id = None;
 
         for monitor in self.space.monitors() {
-            let mon_active = monitor.active();
-
             let make_ipc_workspace = |workspace: &Workspace| {
                 let mut current_windows: Vec<_> =
                     workspace.windows().map(Window::id).map(|id| *id).collect();
@@ -257,6 +255,8 @@ impl Fht {
                     fullscreen_window_idx: workspace.fullscreened_tile_idx(),
                     mwfact: workspace.mwfact(),
                     nmaster: workspace.nmaster(),
+                    is_active: workspace.is_active(),
+                    is_focused: workspace.is_focused(),
                 }
             };
 
@@ -276,7 +276,7 @@ impl Fht {
                         workspace
                     });
 
-                if mon_active && workspace.index() == monitor.active_idx {
+                if workspace.is_focused() {
                     active_workspace_id = Some(*workspace.id());
                 }
             }
@@ -328,5 +328,7 @@ fn workspace_changed(ipc_workspace: &fht_compositor_ipc::Workspace, workspace: &
         || workspace.fullscreened_tile_idx() != ipc_workspace.fullscreen_window_idx
         || workspace.mwfact() != ipc_workspace.mwfact
         || workspace.nmaster() != ipc_workspace.nmaster
+        || workspace.is_active() != ipc_workspace.is_active
+        || workspace.is_focused() != ipc_workspace.is_focused
         || ipc_workspace.windows != current_windows
 }

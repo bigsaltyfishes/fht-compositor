@@ -149,6 +149,15 @@ pub struct Workspace {
     /// An interactive tile resize.
     interactive_resize: Option<InteractiveResize>,
 
+    /// Whether the workspace is focused
+    ///
+    /// Each monitor has its own active workspace, but only the foucsed monitor's workspace will be
+    /// marked as focused.
+    pub is_focused: bool,
+
+    /// Whether the workspace is active
+    pub is_active: bool,
+
     /// Shared configuration of the workspace system
     pub config: Rc<Config>,
 }
@@ -174,6 +183,8 @@ impl Workspace {
             fullscreen_fade_animation: None,
             interactive_resize: None,
             config: Rc::clone(config),
+            is_active: false,
+            is_focused: false,
         }
     }
 
@@ -190,6 +201,26 @@ impl Workspace {
     /// Get the index of this [`Workspace`] in its parent [`Monitor`](super::Monitor).
     pub fn index(&self) -> usize {
         self.index
+    }
+
+    /// Check if this [`Workspace`] is active
+    pub fn is_active(&self) -> bool {
+        self.is_active
+    }
+
+    /// Check if this [`Workspace`] is focused
+    pub fn is_focused(&self) -> bool {
+        self.is_focused
+    }
+
+    /// Set active state for this [`Workspace`]
+    pub fn set_active(&mut self, active: bool) {
+        self.is_active = active;
+    }
+
+    /// Set focused state for this [`Workspace`]
+    pub fn set_focused(&mut self, focused: bool) {
+        self.is_focused = focused;
     }
 
     /// Merge this [`Workspace`] with another one.
@@ -1840,7 +1871,7 @@ impl Workspace {
                 [end.x, end.y],
                 animation_config.duration,
             )
-            .with_curve(animation_config.curve)
+            .with_curve(animation_config.curve),
         ));
     }
 
